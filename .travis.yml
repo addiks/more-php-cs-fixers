@@ -1,0 +1,13 @@
+language: php
+php:
+  - 7.1
+notifications:
+  email: notifications.github@addiks.de
+install:
+- composer install
+script:
+- vendor/bin/psalm
+- vendor/bin/phpstan analyze php/ --level 7
+- vendor/bin/phpunit tests/unit/
+- vendor/bin/phpunit tests/integration/
+- vendor/bin/infection -s -vv --min-msi=80
