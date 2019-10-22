@@ -7,8 +7,8 @@
 
 This repository contains a few additional fixers for the [PHP-CS-Fixer][9] project.
 
-[1]: https://travis-ci.org/addiks/more-php-cs-fixers
-[2]: https://travis-ci.org/addiks/more-php-cs-fixers.svg?branch=master
+[1]: https://travis-ci.com/addiks/more-php-cs-fixers
+[2]: https://travis-ci.com/addiks/more-php-cs-fixers.svg?branch=master
 [3]: https://scrutinizer-ci.com/g/addiks/more-php-cs-fixers/badges/build.png?b=master
 [4]: https://scrutinizer-ci.com/g/addiks/more-php-cs-fixers/build-status/master
 [5]: https://scrutinizer-ci.com/g/addiks/more-php-cs-fixers/badges/quality-score.png?b=master
