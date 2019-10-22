@@ -30,6 +30,11 @@ final class BlankLineBeforeCatchBlockFixer extends AbstractFixer implements Whit
         $this->whitespacesConfig = new WhitespacesFixerConfig();
     }
 
+    public function getName()
+    {
+        return 'Addiks/blank_line_before_catch_block';
+    }
+
     /**
      * {@inheritdoc}
      */
