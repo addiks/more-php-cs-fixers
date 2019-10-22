@@ -20,6 +20,8 @@ composer require addiks/more-php-cs-fixers
 
 ### 2. Register fixers in PHP-CS-Fixer configuration (file `.php_cs`).:
 ```diff
+<?php
+
 +use Addiks\MorePhpCsFixers\Whitespace\BlankLineBeforeCatchBlockFixer;
 +use Addiks\MorePhpCsFixers\Whitespace\BlankLineBeforeElseBlockFixer;
 +use Addiks\MorePhpCsFixers\Whitespace\BlankLineBeforeDocCommentFixer;
@@ -36,6 +38,47 @@ $config = PhpCsFixer\Config::create();
 +    'Addiks/blank_line_before_doccomment': true,
 +]);
 return $config;
+```
+
+## The fixers
+
+### Addiks/blank_line_before_catch_block
+```diff
+<?php
+
+try {
+    foo();
++
+} catch (\Exception $b) {
+    bar();
++
+} finally {
+    baz();
+}
+```
+
+### Addiks/blank_line_before_else_block
+```diff
+<?php
+if ($a) {
+    foo();
++
+} elseif ($b) {
+    bar();
++
+} else {
+    baz();
+}
+```
+
+### Addiks/blank_line_before_doccomment
+```diff
+<?php
+/** @var string $foo */
+$foo = "Lorem ipsum";
++
+/** @var string $bar */
+$bar = "dolor sit amet";
 ```
 
 
