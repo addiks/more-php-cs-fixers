@@ -18,9 +18,18 @@ use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
+use PhpCsFixer\WhitespacesFixerConfig;
 
 final class BlankLineBeforeCatchBlockFixer extends AbstractFixer implements WhitespacesAwareFixerInterface
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        # Fixes psalm: PropertyNotSetInConstructor
+        $this->whitespacesConfig = new WhitespacesFixerConfig();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -66,7 +75,7 @@ try {
     /**
      * {@inheritdoc}
      */
-    protected function applyFix(\SplFileInfo $file, Tokens $tokens)
+    protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         /** @var string $lineEnding */
         $lineEnding = $this->whitespacesConfig->getLineEnding();
@@ -74,7 +83,7 @@ try {
         foreach ($tokens as $index => $token) {
             /** @var Token $token */
             if ($token->isGivenKind([T_CATCH, T_FINALLY])) {
-                $index = $tokens->getPrevMeaningfulToken($index);
+                $index = (int)$tokens->getPrevMeaningfulToken($index);
 
                 if ($tokens[$index]->equals('}')) {
                     --$index;

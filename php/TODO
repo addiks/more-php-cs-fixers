@@ -1,0 +1,6 @@
+ - no_get_prefix_fixer:
+    - "function getChannel(): Channel { ..." => "function channel(): Channel { ..."
+    - Via Rector? https://github.com/rectorphp/rector
+
+ - correct order in var doc-comment:
+    - /* @var $shipmentNotificationItem ShipmentNotificationItem */

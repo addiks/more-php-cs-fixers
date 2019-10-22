@@ -18,9 +18,18 @@ use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
+use PhpCsFixer\WhitespacesFixerConfig;
 
 final class BlankLineBeforeDocCommentFixer extends AbstractFixer implements WhitespacesAwareFixerInterface
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        # Fixes psalm: PropertyNotSetInConstructor
+        $this->whitespacesConfig = new WhitespacesFixerConfig();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -63,14 +72,14 @@ $bar = "dolor sit amet";
     /**
      * {@inheritdoc}
      */
-    protected function applyFix(\SplFileInfo $file, Tokens $tokens)
+    protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         /** @var string $lineEnding */
         $lineEnding = $this->whitespacesConfig->getLineEnding();
 
         foreach ($tokens as $index => $token) {
             /** @var Token $token */
-            if ($token->isGivenKind(T_DOC_COMMENT)) {
+            if ($token->isGivenKind(T_DOC_COMMENT) && $index > 2) {
                 --$index;
 
                 /** @var Token $whitespace */
