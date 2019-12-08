@@ -2,5 +2,24 @@
     - "function getChannel(): Channel { ..." => "function channel(): Channel { ..."
     - Via Rector? https://github.com/rectorphp/rector
 
- - correct order in var doc-comment:
-    - /* @var $shipmentNotificationItem ShipmentNotificationItem */
+
+ - correct position of loop-item doc-comment:
+
+        /** @var ProductionStep $step */
+        foreach ($supportedSteps as $step) {
+
+    vs.:
+
+        foreach ($supportedSteps as $step) {
+            /** @var ProductionStep $step */
+
+
+
+ - correct the generics-type-documentation in doc-comments:
+        /** @var Foo[] $foos */
+        /** @var array<Foo> $foos */
+        /** @var Collection<Foo> $foos */
+
+ - convert doc-comment from shorthand-nullable to explicit nullable:
+        /** @var ?Foo $foo */
+        /** @var Foo|null $foo */

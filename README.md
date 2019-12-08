@@ -81,6 +81,13 @@ $foo = "Lorem ipsum";
 $bar = "dolor sit amet";
 ```
 
+### Addiks/correct_order_in_var_doc_comment
+```diff
+<?php
+-/** @var $foo string */
++/** @var string $foo */
+```
+
 
 [1]: https://travis-ci.com/addiks/more-php-cs-fixers
 [2]: https://travis-ci.com/addiks/more-php-cs-fixers.svg?branch=master
