@@ -81,11 +81,25 @@ $foo = "Lorem ipsum";
 $bar = "dolor sit amet";
 ```
 
-### Addiks/correct_order_in_var_doc_comment
+### Addiks/correct_order_in_var_doccomment
 ```diff
 <?php
 -/** @var $foo string */
 +/** @var string $foo */
+```
+
+### Addiks/nullable_in_doccomment
+```diff
+<?php
+-/** @var ?string $foo */
++/** @var string|null $foo */
+```
+
+### Addiks/array_in_doccomment
+```diff
+<?php
+-/** @var string[] $foo */
++/** @var array<string> $foo */
 ```
 
 

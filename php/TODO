@@ -12,14 +12,3 @@
 
         foreach ($supportedSteps as $step) {
             /** @var ProductionStep $step */
-
-
-
- - correct the generics-type-documentation in doc-comments:
-        /** @var Foo[] $foos */
-        /** @var array<Foo> $foos */
-        /** @var Collection<Foo> $foos */
-
- - convert doc-comment from shorthand-nullable to explicit nullable:
-        /** @var ?Foo $foo */
-        /** @var Foo|null $foo */
