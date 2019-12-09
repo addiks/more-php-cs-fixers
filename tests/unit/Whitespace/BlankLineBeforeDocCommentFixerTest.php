@@ -88,6 +88,25 @@ $baz = "amet";
     $baz = "amet";
     ',
             ],
+            [
+                '<?php
+function foo() {
+    /** @var string $foo */
+    $foo = "Lorem ipsum";
+
+    /** @var string $bar */
+    $bar = "dolor sit";
+}
+',
+                '<?php
+function foo() {
+    /** @var string $foo */
+    $foo = "Lorem ipsum";
+    /** @var string $bar */
+    $bar = "dolor sit";
+}
+',
+            ],
         ];
     }
 

@@ -87,14 +87,18 @@ $bar = "dolor sit amet";
             if ($token->isGivenKind(T_DOC_COMMENT) && $index > 2) {
                 --$index;
 
-                /** @var Token $whitespace */
-                $whitespace = $tokens[$index];
+                $prevIndex = (int)$tokens->getPrevMeaningfulToken($index);
 
-                /** @var int $presentNewlines */
-                $presentNewlines = substr_count($whitespace->getContent(), $lineEnding);
+                if (!$tokens[$prevIndex]->equals('{')) {
+                    /** @var Token $whitespace */
+                    $whitespace = $tokens[$index];
 
-                if ($whitespace->isWhitespace() && $presentNewlines < 2) {
-                    $tokens[$index] = $this->convertWhitespaceToken($whitespace);
+                    /** @var int $presentNewlines */
+                    $presentNewlines = substr_count($whitespace->getContent(), $lineEnding);
+
+                    if ($whitespace->isWhitespace() && $presentNewlines < 2) {
+                        $tokens[$index] = $this->convertWhitespaceToken($whitespace);
+                    }
                 }
             }
         }
