@@ -16,6 +16,7 @@ use PhpCsFixer\Tests\Test\AbstractFixerTestCase;
 use Addiks\MorePhpCsFixers\Whitespace\BlankLineBeforeDocCommentFixer;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\CodeSample;
+use PhpCsFixer\AbstractFixer;
 
 /**
  * @internal
@@ -115,23 +116,22 @@ function foo() {
      */
     public function shouldHaveAFixerDefinition()
     {
-        $this->assertEquals(
-            new FixerDefinition(
-                'An empty line feed must precede any doc-comment.',
-                [
-                    new CodeSample(
-                        '<?php
-
-/** @var string $foo */
-$foo = "Lorem ipsum";
-
-/** @var string $bar */
-$bar = "dolor sit amet";
-'
-                    ),
-                ]
-            ),
-            $this->createFixer()->getDefinition()
+        /** @var FixerDefinitionInterface $definition */
+        $definition = $this->createFixer()->getDefinition();
+        
+        $this->assertSame(
+            'An empty line feed must precede any doc-comment.',
+            $definition->getSummary()
+        );
+        
+        $this->assertSame(<<<CODE
+            <?php
+            /** @var string \$foo */
+            \$foo = "Lorem ipsum";
+            /** @var string \$bar */
+            \$bar = "dolor sit amet";
+            CODE . "\n",
+            $definition->getCodeSamples()[0]->getCode()
         );
     }
 
@@ -140,12 +140,11 @@ $bar = "dolor sit amet";
      */
     public function shouldHaveTheRightPriority()
     {
-        $this->assertEquals(-26, $this->createFixer()->getPriority());
+        $this->assertSame(-26, $this->createFixer()->getPriority());
     }
 
-    protected function createFixer()
+    protected function createFixer(): AbstractFixer
     {
         return new BlankLineBeforeDocCommentFixer();
     }
-
 }

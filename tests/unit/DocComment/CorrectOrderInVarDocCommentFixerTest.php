@@ -16,6 +16,7 @@ use PhpCsFixer\Tests\Test\AbstractFixerTestCase;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use Addiks\MorePhpCsFixers\DocComment\CorrectOrderInVarDocCommentFixer;
+use PhpCsFixer\AbstractFixer;
 
 /**
  * @internal
@@ -100,25 +101,25 @@ final class CorrectOrderInVarDocCommentFixerTest extends AbstractFixerTestCase
      */
     public function shouldHaveAFixerDefinition()
     {
-        $this->assertEquals(
-            new FixerDefinition(
-                'Corrects the order of variable and typedeclaration in a @var doccomment.',
-                [
-                    new CodeSample(
-                        '<?php
-
-/** @var string $foo */
-'
-                    ),
-                ]
-            ),
-            $this->createFixer()->getDefinition()
+        /** @var FixerDefinitionInterface $definition */
+        $definition = $this->createFixer()->getDefinition();
+        
+        $this->assertSame(
+            'Corrects the order of variable and typedeclaration in a @var doccomment.',
+            $definition->getSummary()
+        );
+        
+        $this->assertSame(<<<CODE
+            <?php
+            
+            /** @var \$foo string */
+            CODE . "\n",
+            $definition->getCodeSamples()[0]->getCode()
         );
     }
 
-    protected function createFixer()
+    protected function createFixer(): AbstractFixer
     {
         return new CorrectOrderInVarDocCommentFixer();
     }
-
 }

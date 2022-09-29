@@ -17,11 +17,12 @@ use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\Tokenizer\Token;
+use PhpCsFixer\Fixer\FixerInterface;
+use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 
-final class ArrayInDocCommentFixer extends AbstractFixer
+final class ArrayInDocCommentFixer extends AbstractFixer implements FixerInterface
 {
-
-    public function getName()
+    public function getName(): string
     {
         return 'Addiks/array_in_doccomment';
     }
@@ -29,7 +30,7 @@ final class ArrayInDocCommentFixer extends AbstractFixer
     /**
      * {@inheritdoc}
      */
-    public function getDefinition()
+    public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
             'Normalizes array-notations in doccomments.',
@@ -37,7 +38,7 @@ final class ArrayInDocCommentFixer extends AbstractFixer
                 new CodeSample(
                     '<?php
 
-/** @var array<string> $foo */
+/** @var string[] $foo */
 '
                 ),
             ]
@@ -47,14 +48,19 @@ final class ArrayInDocCommentFixer extends AbstractFixer
     /**
      * {@inheritdoc}
      */
-    public function isCandidate(Tokens $tokens)
+    public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isTokenKindFound(T_DOC_COMMENT);
     }
 
-    public function getPriority()
+    public function getPriority(): int
     {
         return -10;
+    }
+
+    public function supports(\SplFileInfo $file): bool
+    {
+        return true;
     }
 
     /**
@@ -76,7 +82,7 @@ final class ArrayInDocCommentFixer extends AbstractFixer
                 /** @var string $content */
                 $content = $token->getContent();
 
-                $content = preg_replace_callback($pattern, function(array $matches) {
+                $content = preg_replace_callback($pattern, function (array $matches) {
                     array_shift($matches);
                     $matches[1] = "array<" . $matches[1] . ">";
                     $matches[2] = "";
@@ -87,5 +93,4 @@ final class ArrayInDocCommentFixer extends AbstractFixer
             }
         }
     }
-
 }

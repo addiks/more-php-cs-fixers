@@ -17,11 +17,12 @@ use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\Tokenizer\Token;
+use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
+use PhpCsFixer\Fixer\FixerInterface;
 
-final class CorrectOrderInVarDocCommentFixer extends AbstractFixer
+final class CorrectOrderInVarDocCommentFixer extends AbstractFixer implements FixerInterface
 {
-
-    public function getName()
+    public function getName(): string
     {
         return 'Addiks/correct_order_in_var_doccomment';
     }
@@ -29,7 +30,7 @@ final class CorrectOrderInVarDocCommentFixer extends AbstractFixer
     /**
      * {@inheritdoc}
      */
-    public function getDefinition()
+    public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
             'Corrects the order of variable and typedeclaration in a @var doccomment.',
@@ -37,19 +38,29 @@ final class CorrectOrderInVarDocCommentFixer extends AbstractFixer
                 new CodeSample(
                     '<?php
 
-/** @var string $foo */
+/** @var $foo string */
 '
                 ),
             ]
         );
     }
 
+    public function getPriority(): int
+    {
+        return 0;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function isCandidate(Tokens $tokens)
+    public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isTokenKindFound(T_DOC_COMMENT);
+    }
+
+    public function supports(\SplFileInfo $file): bool
+    {
+        return true;
     }
 
     /**
@@ -71,7 +82,7 @@ final class CorrectOrderInVarDocCommentFixer extends AbstractFixer
                 /** @var string $content */
                 $content = $token->getContent();
 
-                $content = preg_replace_callback($pattern, function(array $matches) {
+                $content = preg_replace_callback($pattern, function (array $matches) {
                     array_shift($matches);
                     [$matches[1], $matches[3]] = [$matches[3], $matches[1]];
                     return implode('', $matches);
@@ -81,5 +92,4 @@ final class CorrectOrderInVarDocCommentFixer extends AbstractFixer
             }
         }
     }
-
 }

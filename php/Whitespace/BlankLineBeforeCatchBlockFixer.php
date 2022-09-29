@@ -19,18 +19,11 @@ use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\WhitespacesFixerConfig;
+use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 
 final class BlankLineBeforeCatchBlockFixer extends AbstractFixer implements WhitespacesAwareFixerInterface
 {
-    public function __construct()
-    {
-        parent::__construct();
-
-        # Fixes psalm: PropertyNotSetInConstructor
-        $this->whitespacesConfig = new WhitespacesFixerConfig();
-    }
-
-    public function getName()
+    public function getName(): string
     {
         return 'Addiks/blank_line_before_catch_block';
     }
@@ -38,7 +31,7 @@ final class BlankLineBeforeCatchBlockFixer extends AbstractFixer implements Whit
     /**
      * {@inheritdoc}
      */
-    public function getDefinition()
+    public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
             'An empty line feed must precede any catch or finally codeblock.',
@@ -47,10 +40,8 @@ final class BlankLineBeforeCatchBlockFixer extends AbstractFixer implements Whit
                     '<?php
 try {
     foo();
-
 } catch (\Exception $b) {
     bar();
-
 } finally {
     baz();
 }
@@ -63,18 +54,28 @@ try {
     /**
      * {@inheritdoc}
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         // should run after no_blank_lines_after_phpdoc
         return -26;
     }
 
+    public function setWhitespacesConfig(WhitespacesFixerConfig $config): void
+    {
+        $this->whitespacesConfig = $config;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function isCandidate(Tokens $tokens)
+    public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isTokenKindFound(T_CATCH) || $tokens->isTokenKindFound(T_FINALLY);
+    }
+
+    public function supports(\SplFileInfo $file): bool
+    {
+        return true;
     }
 
     /**
@@ -121,7 +122,7 @@ try {
             substr_replace(
                 $whitespace->getContent(),
                 $lineEnding.$lineEnding,
-                strpos($whitespace->getContent(), $lineEnding),
+                (int) strpos($whitespace->getContent(), $lineEnding),
                 1
             ),
         ]);

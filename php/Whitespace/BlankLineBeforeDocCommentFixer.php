@@ -19,18 +19,11 @@ use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\WhitespacesFixerConfig;
+use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 
 final class BlankLineBeforeDocCommentFixer extends AbstractFixer implements WhitespacesAwareFixerInterface
 {
-    public function __construct()
-    {
-        parent::__construct();
-
-        # Fixes psalm: PropertyNotSetInConstructor
-        $this->whitespacesConfig = new WhitespacesFixerConfig();
-    }
-
-    public function getName()
+    public function getName(): string
     {
         return 'Addiks/blank_line_before_doccomment';
     }
@@ -38,17 +31,15 @@ final class BlankLineBeforeDocCommentFixer extends AbstractFixer implements Whit
     /**
      * {@inheritdoc}
      */
-    public function getDefinition()
+    public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
             'An empty line feed must precede any doc-comment.',
             [
                 new CodeSample(
                     '<?php
-
 /** @var string $foo */
 $foo = "Lorem ipsum";
-
 /** @var string $bar */
 $bar = "dolor sit amet";
 '
@@ -60,18 +51,28 @@ $bar = "dolor sit amet";
     /**
      * {@inheritdoc}
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         // should run after no_blank_lines_after_phpdoc
         return -26;
     }
 
+    public function setWhitespacesConfig(WhitespacesFixerConfig $config): void
+    {
+        $this->whitespacesConfig = $config;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function isCandidate(Tokens $tokens)
+    public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isTokenKindFound(T_DOC_COMMENT);
+    }
+
+    public function supports(\SplFileInfo $file): bool
+    {
+        return true;
     }
 
     /**
@@ -114,7 +115,7 @@ $bar = "dolor sit amet";
             substr_replace(
                 $whitespace->getContent(),
                 $lineEnding.$lineEnding,
-                strpos($whitespace->getContent(), $lineEnding),
+                (int) strpos($whitespace->getContent(), $lineEnding),
                 1
             ),
         ]);

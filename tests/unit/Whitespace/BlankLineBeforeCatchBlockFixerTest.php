@@ -16,6 +16,7 @@ use PhpCsFixer\Tests\Test\AbstractFixerTestCase;
 use Addiks\MorePhpCsFixers\Whitespace\BlankLineBeforeCatchBlockFixer;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\CodeSample;
+use PhpCsFixer\AbstractFixer;
 
 /**
  * @internal
@@ -119,7 +120,7 @@ try {
      */
     public function shouldHaveTheRightPriority()
     {
-        $this->assertEquals(-26, $this->createFixer()->getPriority());
+        $this->assertSame(-26, $this->createFixer()->getPriority());
     }
 
     /**
@@ -127,32 +128,30 @@ try {
      */
     public function shouldHaveAFixerDefinition()
     {
-        $this->assertEquals(
-            new FixerDefinition(
-                'An empty line feed must precede any catch or finally codeblock.',
-                [
-                    new CodeSample(
-                        '<?php
-try {
-    foo();
-
-} catch (\Exception $b) {
-    bar();
-
-} finally {
-    baz();
-}
-'
-                    ),
-                ]
-            ),
-            $this->createFixer()->getDefinition()
+        /** @var FixerDefinitionInterface $definition */
+        $definition = $this->createFixer()->getDefinition();
+        
+        $this->assertSame(
+            'An empty line feed must precede any catch or finally codeblock.',
+            $definition->getSummary()
+        );
+        
+        $this->assertSame(<<<CODE
+            <?php
+            try {
+                foo();
+            } catch (\Exception \$b) {
+                bar();
+            } finally {
+                baz();
+            }
+            CODE . "\n",
+            $definition->getCodeSamples()[0]->getCode()
         );
     }
 
-    protected function createFixer()
+    protected function createFixer(): AbstractFixer
     {
         return new BlankLineBeforeCatchBlockFixer();
     }
-
 }

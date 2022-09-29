@@ -16,6 +16,7 @@ use PhpCsFixer\Tests\Test\AbstractFixerTestCase;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use Addiks\MorePhpCsFixers\DocComment\NullableInDocCommentFixer;
+use PhpCsFixer\AbstractFixer;
 
 /**
  * @internal
@@ -100,19 +101,20 @@ final class NullableInDocCommentFixerTest extends AbstractFixerTestCase
      */
     public function shouldHaveAFixerDefinition()
     {
-        $this->assertEquals(
-            new FixerDefinition(
-                'Normalizes nullable-notations in doccomments.',
-                [
-                    new CodeSample(
-                        '<?php
+        /** @var FixerDefinitionInterface $definition */
+        $definition = $this->createFixer()->getDefinition();
+        
+        $this->assertSame(
+            'Normalizes nullable-notations in doccomments.',
+            $definition->getSummary()
+        );
+        
+        $this->assertSame(<<<CODE
+            <?php
 
-/** @var string|null $foo */
-'
-                    ),
-                ]
-            ),
-            $this->createFixer()->getDefinition()
+            /** @var ?string \$foo */
+            CODE . "\n",
+            $definition->getCodeSamples()[0]->getCode()
         );
     }
 
@@ -121,12 +123,11 @@ final class NullableInDocCommentFixerTest extends AbstractFixerTestCase
      */
     public function shouldHaveTheRightPriority()
     {
-        $this->assertEquals(-10, $this->createFixer()->getPriority());
+        $this->assertSame(-10, $this->createFixer()->getPriority());
     }
 
-    protected function createFixer()
+    protected function createFixer(): AbstractFixer
     {
         return new NullableInDocCommentFixer();
     }
-
 }

@@ -16,6 +16,7 @@ use PhpCsFixer\Tests\Test\AbstractFixerTestCase;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use Addiks\MorePhpCsFixers\DocComment\ArrayInDocCommentFixer;
+use PhpCsFixer\AbstractFixer;
 
 /**
  * @internal
@@ -100,25 +101,25 @@ final class ArrayInDocCommentFixerTest extends AbstractFixerTestCase
      */
     public function shouldHaveAFixerDefinition()
     {
-        $this->assertEquals(
-            new FixerDefinition(
-                'Normalizes array-notations in doccomments.',
-                [
-                    new CodeSample(
-                        '<?php
-
-/** @var array<string> $foo */
-'
-                    ),
-                ]
-            ),
-            $this->createFixer()->getDefinition()
+        /** @var FixerDefinitionInterface $definition */
+        $definition = $this->createFixer()->getDefinition();
+        
+        $this->assertSame(
+            'Normalizes array-notations in doccomments.',
+            $definition->getSummary()
+        );
+        
+        $this->assertSame(<<<CODE
+            <?php
+            
+            /** @var string[] \$foo */
+            CODE . "\n",
+            $definition->getCodeSamples()[0]->getCode()
         );
     }
 
-    protected function createFixer()
+    protected function createFixer(): AbstractFixer
     {
         return new ArrayInDocCommentFixer();
     }
-
 }

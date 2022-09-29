@@ -16,6 +16,8 @@ use PhpCsFixer\Tests\Test\AbstractFixerTestCase;
 use Addiks\MorePhpCsFixers\Whitespace\BlankLineBeforeElseBlockFixer;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\CodeSample;
+use PhpCsFixer\AbstractFixer;
+use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 
 /**
  * @internal
@@ -119,26 +121,25 @@ if ($a) {
      */
     public function shouldHaveAFixerDefinition()
     {
-        $this->assertEquals(
-            new FixerDefinition(
-                'An empty line feed must precede any else or elseif codeblock.',
-                [
-                    new CodeSample(
-                        '<?php
-if ($a) {
-    foo();
-
-} elseif ($b) {
-    bar();
-
-} else {
-    baz();
-}
-'
-                    ),
-                ]
-            ),
-            $this->createFixer()->getDefinition()
+        /** @var FixerDefinitionInterface $definition */
+        $definition = $this->createFixer()->getDefinition();
+        
+        $this->assertSame(
+            'An empty line feed must precede any else or elseif codeblock.',
+            $definition->getSummary()
+        );
+        
+        $this->assertSame(<<<CODE
+            <?php
+            if (\$a) {
+                foo();
+            } elseif (\$b) {
+                bar();
+            } else {
+                baz();
+            }
+            CODE . "\n",
+            $definition->getCodeSamples()[0]->getCode()
         );
     }
 
@@ -147,12 +148,11 @@ if ($a) {
      */
     public function shouldHaveTheRightPriority()
     {
-        $this->assertEquals(-26, $this->createFixer()->getPriority());
+        $this->assertSame(-26, $this->createFixer()->getPriority());
     }
 
-    protected function createFixer()
+    protected function createFixer(): AbstractFixer
     {
         return new BlankLineBeforeElseBlockFixer();
     }
-
 }
